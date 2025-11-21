@@ -23,18 +23,3 @@ public class Task1 {
 }
 
 
-//Scanner scanner=new Scanner(System.in);
-//
-//        System.out.println("Enter the first number");
-//int num1=scanner.nextInt();
-//
-//        System.out.println("Enter the second number");
-//int num2=scanner.nextInt();
-//
-//        try {
-//result =num1/num2;
-//
-//        }catch (ArithmeticException exception){
-//        System.out.println( "Error: Cannot divide by zero!" );
-//        }
-//                System.out.println("result="+ result);
