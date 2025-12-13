@@ -1,22 +1,16 @@
 package model;
 
 public class Account {
+
     private int id;
-
     private String username;
-
     private String password;
-
     private String phoneNumber;
-
     private String address;
-
     private Integer age;
-
     private double balance;
 
     public Account() {
-
     }
 
     public Account(String username, String password) {
@@ -24,7 +18,21 @@ public class Account {
         this.password = password;
     }
 
-    public Account(int id, String username, String password, String phoneNumber, String address, Integer age, double balance) {
+    public Account(int id, String username, String password,
+                   String phoneNumber, String address, Integer age) {
+
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.age = age;
+        this.balance = 0;
+    }
+
+    public Account(int id, String username, String password,
+                   String phoneNumber, String address, Integer age, double balance) {
+
         this.id = id;
         this.username = username;
         this.password = password;
@@ -32,9 +40,6 @@ public class Account {
         this.address = address;
         this.age = age;
         this.balance = balance;
-    }
-
-    public Account(int id, String username, String password, String phoneNumber, String address, Integer age) {
     }
 
     public int getId() {
@@ -104,7 +109,5 @@ public class Account {
                 "  age=" + age + ",\n" +
                 "  balance=" + balance + "\n" +
                 "}";
-
     }
-
 }
