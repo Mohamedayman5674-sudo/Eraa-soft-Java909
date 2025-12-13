@@ -65,7 +65,7 @@ public class EWalletServiceImpl implements ApplicationService {
 
             if (accountService.getAccountByUserNameAndPassword(loginAccount)) {
 
-                // 🔥 خُد الحساب الكامل من السيستم
+               
                 Account fullAccount =
                         accountService.getAccountByUsername(loginAccount);
 
@@ -256,3 +256,4 @@ public class EWalletServiceImpl implements ApplicationService {
     }
 
 }
+
