@@ -10,6 +10,7 @@ import model.Account;
 import model.EWalletSystem;
 
 import java.util.Optional;
+import java.util.Objects;
 
 public class AccountServiceImpl implements AccountService {
 
@@ -34,8 +35,8 @@ public class AccountServiceImpl implements AccountService {
     public Boolean getAccountByUserNameAndPassword(Account account) {
         return eWalletSystem.getAccounts().stream()
                 .anyMatch(acc ->
-                        acc.getUsername().equals(account.getUsername()) &&
-                                acc.getPassword().equals(account.getPassword()));
+                        Objects.equals(acc.getUsername(), account.getUsername()) &&
+                        Objects.equals(acc.getPassword(), account.getPassword()));
     }
 
     @Override
@@ -76,7 +77,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
         acc.setBalance(acc.getBalance() - amount);
-
         return new AccountResult(4, acc.getBalance());
     }
 
@@ -116,24 +116,24 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Boolean isUserNameUnique(String username) {
         return eWalletSystem.getAccounts().stream()
-                .noneMatch(acc -> acc.getUsername().equals(username));
+                .noneMatch(acc -> Objects.equals(acc.getUsername(), username));
     }
 
     @Override
     public Boolean isPhoneNumberUnique(String phoneNumber) {
         return eWalletSystem.getAccounts().stream()
-                .noneMatch(acc -> acc.getPhoneNumber().equals(phoneNumber));
+                .noneMatch(acc -> Objects.equals(acc.getPhoneNumber(), phoneNumber));
     }
 
     private Optional<Account> getOptionalAccountByUserName(Account account) {
         return eWalletSystem.getAccounts().stream()
-                .filter(acc -> acc.getUsername().equals(account.getUsername()))
+                .filter(acc -> Objects.equals(acc.getUsername(), account.getUsername()))
                 .findFirst();
     }
 
     private Optional<Account> getOptionalAccountByPhone(Account account) {
         return eWalletSystem.getAccounts().stream()
-                .filter(acc -> acc.getPhoneNumber().equals(account.getPhoneNumber()))
+                .filter(acc -> Objects.equals(acc.getPhoneNumber(), account.getPhoneNumber()))
                 .findFirst();
     }
 }
