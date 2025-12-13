@@ -57,27 +57,34 @@ public class EWalletServiceImpl implements ApplicationService {
 
     private void login() {
 
-        int attempts = 0;
+    int attempts = 0;
 
-        while (attempts < 4) {
-            try {
-                Account account = getAccount(true);
+    while (attempts < 4) {
+        try {
+            Account loginAccount = getAccount(true);
 
-                if (accountService.getAccountByUserNameAndPassword(account)) {
-                    System.out.println("Login successful!");
-                    profile(account);
-                    return;
-                }
-                throw new InvalidInputException("Invalid username or password");
+            if (accountService.getAccountByUserNameAndPassword(loginAccount)) {
 
-            } catch (RuntimeException exception) {
-                System.out.println("❌ " + exception.getMessage());
-                attempts++;
+                // 🔥 خُد الحساب الكامل من السيستم
+                Account fullAccount =
+                        accountService.getAccountByUsername(loginAccount);
+
+                System.out.println("Login successful!");
+                profile(fullAccount);
+                return;
             }
-        }
 
-        System.out.println("Too many invalid attempts");
+            throw new InvalidInputException("Invalid username or password");
+
+        } catch (RuntimeException exception) {
+            System.out.println("❌ " + exception.getMessage());
+            attempts++;
+        }
     }
+
+    System.out.println("Too many invalid attempts");
+}
+
 
     private void signup() {
 
@@ -247,4 +254,5 @@ public class EWalletServiceImpl implements ApplicationService {
 
         System.out.println("Password updated successfully!");
     }
+
 }
