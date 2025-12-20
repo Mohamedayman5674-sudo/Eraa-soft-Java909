@@ -1,0 +1,37 @@
+--CREATE TABLE schema_name.table_name
+--(column_name_1 datatype
+--column_name_2 datatype);
+
+CREATE TABLE TRAIN_USER1.MANGER(
+ id NUMBER(3) NOT NULL,
+ name VARCHAR2(100),
+ age NUMBER,
+ birth_date DATE,
+ address VARCHAR2(250)
+);
+
+ALTER TABLE MANGER 
+DROP COLUMN address;
+
+ALTER TABLE MANGER 
+ADD (
+ City_address VARCHAR2(150),
+ Street VARCHAR2(100)
+);
+
+ALTER TABLE MANGER 
+RENAME COLUMN name TO Full_name;
+
+CREATE TABLE Owner 
+AS SELECT id, Full_name, birth_date 
+FROM MANGER
+WHERE 1 = 0;
+
+ALTER TABLE MANGER
+RENAME TO Master;
+
+ALTER TABLE Master READ ONLY;
+
+DROP TABLE MANGER  CASCADE CONSTRAINTS;
+DROP TABLE Owner CASCADE CONSTRAINTS;
+DROP TABLE Master CASCADE CONSTRAINTS;
