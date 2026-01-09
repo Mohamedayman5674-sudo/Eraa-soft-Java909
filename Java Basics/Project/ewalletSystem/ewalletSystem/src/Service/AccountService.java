@@ -3,8 +3,12 @@ package Service;
 import helper.AccountResult;
 import model.Account;
 
+import java.util.List;
+import java.util.Map;
+
 public interface AccountService {
 
+    // ===== Existing =====
     Boolean createAccount(Account account);
 
     Boolean getAccountByUserNameAndPassword(Account account);
@@ -24,4 +28,19 @@ public interface AccountService {
     Boolean isUserNameUnique(String username);
 
     Boolean isPhoneNumberUnique(String phoneNumber);
+
+    // ===============================
+
+
+    // ===== Admin Panel =====
+    List<Account> getAllAccounts();
+
+    boolean deleteAccount(int accountId);
+
+    boolean deactivateAccount(int accountId);
+
+    // ===== Transaction History =====
+    Map<Integer, List<String>> getTransactionHistory();
+
+    void addTransaction(int accountId, String action);
 }
