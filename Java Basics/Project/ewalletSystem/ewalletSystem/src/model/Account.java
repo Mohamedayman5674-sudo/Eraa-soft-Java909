@@ -1,5 +1,9 @@
 package model;
 
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class Account {
 
     private int id;
@@ -10,12 +14,23 @@ public class Account {
     private Integer age;
     private double balance;
 
+    // ===== Bonus Fields =====
+    private boolean isAdmin;
+    private boolean active;
+
+    // Transaction history (ordered)
+    private Map<LocalDateTime, String> transactionHistory = new LinkedHashMap<>();
+
+    // ========================
+
     public Account() {
+        this.active = true;
     }
 
     public Account(String username, String password) {
         this.username = username;
         this.password = password;
+        this.active = true;
     }
 
     public Account(int id, String username, String password,
@@ -28,6 +43,7 @@ public class Account {
         this.address = address;
         this.age = age;
         this.balance = 0;
+        this.active = true;
     }
 
     public Account(int id, String username, String password,
@@ -40,7 +56,15 @@ public class Account {
         this.address = address;
         this.age = age;
         this.balance = balance;
+        this.active = true;
     }
+
+    // ===== History Helper =====
+    public void addTransaction(String action) {
+        transactionHistory.put(LocalDateTime.now(), action);
+    }
+
+    // ===== Getters & Setters =====
 
     public int getId() {
         return id;
@@ -62,6 +86,22 @@ public class Account {
         return password;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -76,6 +116,10 @@ public class Account {
 
     public String getAddress() {
         return address;
+    }
+
+    public Map<LocalDateTime, String> getTransactionHistory() {
+        return transactionHistory;
     }
 
     public void setAddress(String address) {
@@ -98,16 +142,18 @@ public class Account {
         this.balance = balance;
     }
 
+    // ===== Pretty Print =====
     @Override
     public String toString() {
         return "Account{\n" +
                 "  id=" + id + ",\n" +
                 "  username='" + username + "',\n" +
-                "  password='" + password + "',\n" +
                 "  phoneNumber='" + phoneNumber + "',\n" +
                 "  address='" + address + "',\n" +
                 "  age=" + age + ",\n" +
-                "  balance=" + balance + "\n" +
-                "}";
+                "  balance=" + balance + ",\n" +
+                "  isAdmin=" + isAdmin + ",\n" +
+                "  active=" + active + "\n" +
+                '}';
     }
 }
