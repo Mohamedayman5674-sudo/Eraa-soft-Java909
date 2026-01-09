@@ -1,21 +1,43 @@
 package Service.impl;
 
-import Exceptions.AccountNotFoundException;
-import Exceptions.DuplicateAccountException;
-import Exceptions.InsufficientBalanceException;
-import Exceptions.InvalidInputException;
+import Exceptions.*;
 import Service.AccountService;
 import helper.AccountResult;
 import model.Account;
 import model.EWalletSystem;
 
-import java.util.Optional;
-import java.util.Objects;
+import java.util.*;
 
 public class AccountServiceImpl implements AccountService {
 
     private final EWalletSystem eWalletSystem = new EWalletSystem();
 
+    // =============================
+    //  Transaction History
+    // accountId -> list of actions
+    // =============================
+    private final Map<Integer, List<String>> transactionHistory = new HashMap<>();
+
+    // =============================
+    //  Constructor (Auto Admin)
+    // =============================
+    public AccountServiceImpl() {
+        Account admin = new Account(
+                0,
+                "IAM",
+                "IAM123",
+                "0000000000",
+                "ADMIN",
+                99
+        );
+        eWalletSystem.getAccounts().add(admin);
+        transactionHistory.put(admin.getId(), new ArrayList<>());
+        addTransaction(admin.getId(), "Admin account created");
+    }
+
+    // =============================
+    // Create Account
+    // =============================
     @Override
     public Boolean createAccount(Account account) {
 
@@ -28,15 +50,28 @@ public class AccountServiceImpl implements AccountService {
         }
 
         eWalletSystem.getAccounts().add(account);
+        transactionHistory.put(account.getId(), new ArrayList<>());
+        addTransaction(account.getId(), "Signup");
+
         return true;
     }
 
+    // =============================
+    // Login
+    // =============================
     @Override
     public Boolean getAccountByUserNameAndPassword(Account account) {
-        return eWalletSystem.getAccounts().stream()
+        boolean success = eWalletSystem.getAccounts().stream()
                 .anyMatch(acc ->
                         Objects.equals(acc.getUsername(), account.getUsername()) &&
                         Objects.equals(acc.getPassword(), account.getPassword()));
+
+        if (success) {
+            Account acc = getOptionalAccountByUserName(account).get();
+            addTransaction(acc.getId(), "Login");
+        }
+
+        return success;
     }
 
     @Override
@@ -46,6 +81,9 @@ public class AccountServiceImpl implements AccountService {
                         new AccountNotFoundException("Account not found"));
     }
 
+    // =============================
+    // Deposit
+    // =============================
     @Override
     public AccountResult deposit(Account account, double amount) {
 
@@ -58,9 +96,14 @@ public class AccountServiceImpl implements AccountService {
         }
 
         acc.setBalance(acc.getBalance() + amount);
+        addTransaction(acc.getId(), "Deposit: +" + amount);
+
         return new AccountResult(3, acc.getBalance());
     }
 
+    // =============================
+    // Withdraw
+    // =============================
     @Override
     public AccountResult withdraw(Account account, double amount) {
 
@@ -77,9 +120,14 @@ public class AccountServiceImpl implements AccountService {
         }
 
         acc.setBalance(acc.getBalance() - amount);
+        addTransaction(acc.getId(), "Withdraw: -" + amount);
+
         return new AccountResult(4, acc.getBalance());
     }
 
+    // =============================
+    // Transfer
+    // =============================
     @Override
     public void transfer(Account from, Account to, double amount) {
 
@@ -97,8 +145,14 @@ public class AccountServiceImpl implements AccountService {
 
         from.setBalance(from.getBalance() - amount);
         to.setBalance(to.getBalance() + amount);
+
+        addTransaction(from.getId(), "Transfer to ID " + to.getId() + ": -" + amount);
+        addTransaction(to.getId(), "Transfer from ID " + from.getId() + ": +" + amount);
     }
 
+    // =============================
+    // Search Account
+    // =============================
     @Override
     public Account searchAccount(int id) {
         return eWalletSystem.getAccounts().stream()
@@ -108,6 +162,48 @@ public class AccountServiceImpl implements AccountService {
                         new AccountNotFoundException("Account not found"));
     }
 
+    // =============================
+    // Admin Features
+    // =============================
+    @Override
+    public List<Account> getAllAccounts() {
+        return eWalletSystem.getAccounts();
+    }
+
+    @Override
+    public boolean deleteAccount(int accountId) {
+        Account acc = searchAccount(accountId);
+        eWalletSystem.getAccounts().remove(acc);
+        transactionHistory.remove(accountId);
+        return true;
+    }
+
+    @Override
+    public boolean deactivateAccount(int accountId) {
+        Account acc = searchAccount(accountId);
+        acc.setPassword("DEACTIVATED");
+        addTransaction(accountId, "Account deactivated");
+        return true;
+    }
+
+    // =============================
+    // Transaction History
+    // =============================
+    @Override
+    public Map<Integer, List<String>> getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    @Override
+    public void addTransaction(int accountId, String action) {
+        transactionHistory
+                .computeIfAbsent(accountId, k -> new ArrayList<>())
+                .add(action);
+    }
+
+    // =============================
+    // Utils
+    // =============================
     @Override
     public int generateNewId() {
         return eWalletSystem.getAccounts().size() + 1;
@@ -137,3 +233,4 @@ public class AccountServiceImpl implements AccountService {
                 .findFirst();
     }
 }
+
