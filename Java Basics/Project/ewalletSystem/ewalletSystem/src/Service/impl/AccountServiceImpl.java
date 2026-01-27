@@ -12,18 +12,14 @@ public class AccountServiceImpl implements AccountService {
 
     private final EWalletSystem eWalletSystem = new EWalletSystem();
 
-    // =============================
-    // 🔥 Transaction History
-    // accountId -> list of actions
-    // =============================
+  
+    
     private final Map<Integer, List<String>> transactionHistory = new HashMap<>();
 
-    // =============================
-    // 🔥 Constructor (Auto Admin)
-    // =============================
+  
     public AccountServiceImpl() {
 
-        // prevent duplicate admin
+       
         boolean adminExists = eWalletSystem.getAccounts().stream()
                 .anyMatch(acc -> "IAM".equals(acc.getUsername()));
 
@@ -45,9 +41,7 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    // =============================
-    // Account Operations
-    // =============================
+
     @Override
     public Boolean createAccount(Account account) {
 
@@ -172,9 +166,7 @@ public class AccountServiceImpl implements AccountService {
                         new AccountNotFoundException("Account not found"));
     }
 
-    // =============================
-    // Admin Features
-    // =============================
+ 
     @Override
     public List<Account> getAllAccounts() {
         return eWalletSystem.getAccounts();
@@ -196,9 +188,7 @@ public class AccountServiceImpl implements AccountService {
         return true;
     }
 
-    // =============================
-    // Transaction History
-    // =============================
+   
     @Override
     public Map<Integer, List<String>> getTransactionHistory() {
         return transactionHistory;
@@ -211,9 +201,7 @@ public class AccountServiceImpl implements AccountService {
                 .add(action);
     }
 
-    // =============================
-    // Utils
-    // =============================
+
     @Override
     public int generateNewId() {
         return eWalletSystem.getAccounts().size() + 1;
@@ -243,3 +231,4 @@ public class AccountServiceImpl implements AccountService {
                 .findFirst();
     }
 }
+
