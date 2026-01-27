@@ -1,9 +1,5 @@
 package model;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class Account {
 
     private int id;
@@ -14,23 +10,23 @@ public class Account {
     private Integer age;
     private double balance;
 
-    // ===== Bonus Fields =====
+  
     private boolean isAdmin;
     private boolean active;
-
-    // Transaction history (ordered)
-    private Map<LocalDateTime, String> transactionHistory = new LinkedHashMap<>();
-
-    // ========================
+  
 
     public Account() {
         this.active = true;
+        this.isAdmin = false;
+        this.balance = 0;
     }
 
     public Account(String username, String password) {
         this.username = username;
         this.password = password;
         this.active = true;
+        this.isAdmin = false;
+        this.balance = 0;
     }
 
     public Account(int id, String username, String password,
@@ -44,6 +40,7 @@ public class Account {
         this.age = age;
         this.balance = 0;
         this.active = true;
+        this.isAdmin = false;
     }
 
     public Account(int id, String username, String password,
@@ -57,14 +54,10 @@ public class Account {
         this.age = age;
         this.balance = balance;
         this.active = true;
+        this.isAdmin = false;
     }
 
-    // ===== History Helper =====
-    public void addTransaction(String action) {
-        transactionHistory.put(LocalDateTime.now(), action);
-    }
-
-    // ===== Getters & Setters =====
+    
 
     public int getId() {
         return id;
@@ -118,10 +111,6 @@ public class Account {
         return address;
     }
 
-    public Map<LocalDateTime, String> getTransactionHistory() {
-        return transactionHistory;
-    }
-
     public void setAddress(String address) {
         this.address = address;
     }
@@ -142,7 +131,7 @@ public class Account {
         this.balance = balance;
     }
 
-    // ===== Pretty Print =====
+    
     @Override
     public String toString() {
         return "Account{\n" +
