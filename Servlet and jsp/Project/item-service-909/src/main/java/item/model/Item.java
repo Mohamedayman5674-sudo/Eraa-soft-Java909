@@ -9,7 +9,7 @@ public class Item {
     private double price;
     private int totalNumber;
 
-    // ===== Item Details (NEW) =====
+   
     private String desc;
     private Date issueDate;
     private Date expiryDate;
@@ -30,7 +30,7 @@ public class Item {
         this.totalNumber = totalNumber;
     }
 
-    // ===== Getters / Setters =====
+
 
     public Long getId() {
         return id;
@@ -64,7 +64,7 @@ public class Item {
         this.totalNumber = totalNumber;
     }
 
-    // ===== Details Getters / Setters =====
+
 
     public String getDesc() {
         return desc;
@@ -90,3 +90,4 @@ public class Item {
         this.expiryDate = expiryDate;
     }
 }
+
