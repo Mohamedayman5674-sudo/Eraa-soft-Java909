@@ -60,11 +60,11 @@ public class UserController extends HttpServlet {
 
     // ======================= METHODS =======================
     private void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // 1️⃣ إنهاء السيشن
+          
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
 
-        // 2️⃣ إزالة كل الكوكيز
+     
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
@@ -74,7 +74,7 @@ public class UserController extends HttpServlet {
             }
         }
 
-        // 3️⃣ العودة للـ login
+        
         response.sendRedirect(request.getContextPath() + "/item/login.jsp?message=Logged+out+successfully");
     }
 
@@ -116,4 +116,5 @@ public class UserController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/item/login.jsp?message=Invalid+username+or+password");
         }
     }
+
 }
