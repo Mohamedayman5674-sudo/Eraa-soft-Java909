@@ -15,6 +15,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
 
+//http://localhost:8080/item-service-909/ItemController
+
 @WebServlet("/ItemController")
 public class ItemController extends HttpServlet {
 
@@ -184,5 +186,6 @@ public class ItemController extends HttpServlet {
         details.setExpiryDate(expiryDate);
         return details;
     }
+
 
 }
