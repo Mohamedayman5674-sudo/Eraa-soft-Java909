@@ -3,6 +3,7 @@ package com.spring.demo.vehicle_registration_system.service.impl;
 import com.spring.demo.vehicle_registration_system.dto.LicenseDto;
 import com.spring.demo.vehicle_registration_system.entity.License;
 import com.spring.demo.vehicle_registration_system.entity.Vehicle;
+import com.spring.demo.vehicle_registration_system.helper.BundleMessageService;
 import com.spring.demo.vehicle_registration_system.repo.LicenseRepo;
 import com.spring.demo.vehicle_registration_system.repo.VehicleRepo;
 import com.spring.demo.vehicle_registration_system.service.LicenseService;
@@ -17,18 +18,34 @@ public class LicenseServiceImpl implements LicenseService {
 
     private final LicenseRepo licenseRepo;
     private final VehicleRepo vehicleRepo;
+    private final BundleMessageService bundleMessageService;
 
     @Autowired
-    public LicenseServiceImpl(LicenseRepo licenseRepo,
-                              VehicleRepo vehicleRepo) {
+    public LicenseServiceImpl(
+            LicenseRepo licenseRepo,
+            VehicleRepo vehicleRepo,
+            BundleMessageService bundleMessageService) {
 
         this.licenseRepo = licenseRepo;
         this.vehicleRepo = vehicleRepo;
+        this.bundleMessageService = bundleMessageService;
     }
 
     // CREATE
     @Override
     public LicenseDto createLicense(LicenseDto licenseDto) {
+
+        if (licenseDto.getIssueDate() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.license.issueDate.required"));
+        }
+
+        if (licenseDto.getVehicleId() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.license.vehicle.required"));
+        }
 
         License license = new License();
 
@@ -108,10 +125,15 @@ public class LicenseServiceImpl implements LicenseService {
     @Override
     public LicenseDto updateLicense(LicenseDto licenseDto) {
 
+        if (licenseDto.getIssueDate() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.license.issueDate.required"));
+        }
+
         License license = new License();
 
         license.setId(licenseDto.getId());
-
         license.setIssueDate(licenseDto.getIssueDate());
 
         // BUSINESS LOGIC
