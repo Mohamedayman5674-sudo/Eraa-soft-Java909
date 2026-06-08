@@ -3,6 +3,7 @@ package com.spring.demo.vehicle_registration_system.service.impl;
 import com.spring.demo.vehicle_registration_system.dto.VehicleDto;
 import com.spring.demo.vehicle_registration_system.entity.User;
 import com.spring.demo.vehicle_registration_system.entity.Vehicle;
+import com.spring.demo.vehicle_registration_system.helper.BundleMessageService;
 import com.spring.demo.vehicle_registration_system.repo.UserRepo;
 import com.spring.demo.vehicle_registration_system.repo.VehicleRepo;
 import com.spring.demo.vehicle_registration_system.service.VehicleService;
@@ -17,18 +18,37 @@ public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepo vehicleRepo;
     private final UserRepo userRepo;
+    private final BundleMessageService bundleMessageService;
 
     @Autowired
-    public VehicleServiceImpl(VehicleRepo vehicleRepo,
-                              UserRepo userRepo) {
+    public VehicleServiceImpl(
+            VehicleRepo vehicleRepo,
+            UserRepo userRepo,
+            BundleMessageService bundleMessageService) {
 
         this.vehicleRepo = vehicleRepo;
         this.userRepo = userRepo;
+        this.bundleMessageService = bundleMessageService;
     }
 
     // CREATE
     @Override
     public VehicleDto createVehicle(VehicleDto vehicleDto) {
+
+        if (vehicleDto.getPlateNumber() == null
+                || vehicleDto.getPlateNumber().isBlank()) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.vehicle.plate.required"));
+        }
+
+        if (vehicleDto.getOwnerId() == null) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.vehicle.owner.required"));
+        }
 
         Vehicle vehicle = new Vehicle();
 
@@ -38,7 +58,6 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setYear(vehicleDto.getYear());
         vehicle.setStatus(vehicleDto.getStatus());
 
-        // GET OWNER
         User owner = userRepo.findById(vehicleDto.getOwnerId())
                 .orElse(null);
 
@@ -107,6 +126,14 @@ public class VehicleServiceImpl implements VehicleService {
     // UPDATE
     @Override
     public VehicleDto updateVehicle(VehicleDto vehicleDto) {
+
+        if (vehicleDto.getPlateNumber() == null
+                || vehicleDto.getPlateNumber().isBlank()) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.vehicle.plate.required"));
+        }
 
         Vehicle vehicle = new Vehicle();
 
