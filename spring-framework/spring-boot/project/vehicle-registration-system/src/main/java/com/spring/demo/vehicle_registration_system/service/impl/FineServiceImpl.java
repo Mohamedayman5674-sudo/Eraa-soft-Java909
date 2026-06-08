@@ -3,6 +3,7 @@ package com.spring.demo.vehicle_registration_system.service.impl;
 import com.spring.demo.vehicle_registration_system.dto.FineDto;
 import com.spring.demo.vehicle_registration_system.entity.Fine;
 import com.spring.demo.vehicle_registration_system.entity.Vehicle;
+import com.spring.demo.vehicle_registration_system.helper.BundleMessageService;
 import com.spring.demo.vehicle_registration_system.repo.FineRepo;
 import com.spring.demo.vehicle_registration_system.repo.VehicleRepo;
 import com.spring.demo.vehicle_registration_system.service.FineService;
@@ -17,18 +18,34 @@ public class FineServiceImpl implements FineService {
 
     private final FineRepo fineRepo;
     private final VehicleRepo vehicleRepo;
+    private final BundleMessageService bundleMessageService;
 
     @Autowired
-    public FineServiceImpl(FineRepo fineRepo,
-                           VehicleRepo vehicleRepo) {
+    public FineServiceImpl(
+            FineRepo fineRepo,
+            VehicleRepo vehicleRepo,
+            BundleMessageService bundleMessageService) {
 
         this.fineRepo = fineRepo;
         this.vehicleRepo = vehicleRepo;
+        this.bundleMessageService = bundleMessageService;
     }
 
     // CREATE
     @Override
     public FineDto createFine(FineDto fineDto) {
+
+        if (fineDto.getAmount() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.fine.amount.required"));
+        }
+
+        if (fineDto.getVehicleId() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.fine.vehicle.required"));
+        }
 
         Fine fine = new Fine();
 
@@ -105,6 +122,12 @@ public class FineServiceImpl implements FineService {
     // UPDATE
     @Override
     public FineDto updateFine(FineDto fineDto) {
+
+        if (fineDto.getAmount() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.fine.amount.required"));
+        }
 
         Fine fine = new Fine();
 
