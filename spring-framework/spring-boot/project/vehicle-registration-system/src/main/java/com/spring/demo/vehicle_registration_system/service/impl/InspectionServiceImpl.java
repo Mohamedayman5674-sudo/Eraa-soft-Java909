@@ -3,6 +3,7 @@ package com.spring.demo.vehicle_registration_system.service.impl;
 import com.spring.demo.vehicle_registration_system.dto.InspectionDto;
 import com.spring.demo.vehicle_registration_system.entity.Inspection;
 import com.spring.demo.vehicle_registration_system.entity.Vehicle;
+import com.spring.demo.vehicle_registration_system.helper.BundleMessageService;
 import com.spring.demo.vehicle_registration_system.repo.InspectionRepo;
 import com.spring.demo.vehicle_registration_system.repo.VehicleRepo;
 import com.spring.demo.vehicle_registration_system.service.InspectionService;
@@ -17,18 +18,34 @@ public class InspectionServiceImpl implements InspectionService {
 
     private final InspectionRepo inspectionRepo;
     private final VehicleRepo vehicleRepo;
+    private final BundleMessageService bundleMessageService;
 
     @Autowired
-    public InspectionServiceImpl(InspectionRepo inspectionRepo,
-                                 VehicleRepo vehicleRepo) {
+    public InspectionServiceImpl(
+            InspectionRepo inspectionRepo,
+            VehicleRepo vehicleRepo,
+            BundleMessageService bundleMessageService) {
 
         this.inspectionRepo = inspectionRepo;
         this.vehicleRepo = vehicleRepo;
+        this.bundleMessageService = bundleMessageService;
     }
 
     // CREATE
     @Override
     public InspectionDto createInspection(InspectionDto inspectionDto) {
+
+        if (inspectionDto.getInspectionDate() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.inspection.date.required"));
+        }
+
+        if (inspectionDto.getVehicleId() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.inspection.vehicle.required"));
+        }
 
         Inspection inspection = new Inspection();
 
@@ -40,7 +57,6 @@ public class InspectionServiceImpl implements InspectionService {
                 inspectionDto.getNotes()
         );
 
-        // BUSINESS LOGIC
         inspection.setValidUntil(
                 inspectionDto.getInspectionDate().plusMonths(6)
         );
@@ -132,6 +148,12 @@ public class InspectionServiceImpl implements InspectionService {
     public InspectionDto updateInspection(
             InspectionDto inspectionDto) {
 
+        if (inspectionDto.getInspectionDate() == null) {
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.inspection.date.required"));
+        }
+
         Inspection inspection = new Inspection();
 
         inspection.setId(inspectionDto.getId());
@@ -144,7 +166,6 @@ public class InspectionServiceImpl implements InspectionService {
                 inspectionDto.getNotes()
         );
 
-        // BUSINESS LOGIC
         inspection.setValidUntil(
                 inspectionDto.getInspectionDate().plusMonths(6)
         );
