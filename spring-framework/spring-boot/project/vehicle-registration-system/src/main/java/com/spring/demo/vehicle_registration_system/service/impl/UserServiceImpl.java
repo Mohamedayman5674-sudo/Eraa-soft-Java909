@@ -2,6 +2,7 @@ package com.spring.demo.vehicle_registration_system.service.impl;
 
 import com.spring.demo.vehicle_registration_system.dto.UserDto;
 import com.spring.demo.vehicle_registration_system.entity.User;
+import com.spring.demo.vehicle_registration_system.helper.BundleMessageService;
 import com.spring.demo.vehicle_registration_system.repo.UserRepo;
 import com.spring.demo.vehicle_registration_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,36 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private final BundleMessageService bundleMessageService;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(
+            UserRepo userRepo,
+            BundleMessageService bundleMessageService) {
+
         this.userRepo = userRepo;
+        this.bundleMessageService = bundleMessageService;
     }
 
     // CREATE
     @Override
     public UserDto createUser(UserDto userDto) {
+
+        if (userDto.getName() == null
+                || userDto.getName().isBlank()) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.user.name.required"));
+        }
+
+        if (userDto.getEmail() == null
+                || userDto.getEmail().isBlank()) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.user.email.required"));
+        }
 
         User user = new User();
         user.setName(userDto.getName());
@@ -79,6 +101,22 @@ public class UserServiceImpl implements UserService {
     // UPDATE
     @Override
     public UserDto updateUser(UserDto userDto) {
+
+        if (userDto.getName() == null
+                || userDto.getName().isBlank()) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.user.name.required"));
+        }
+
+        if (userDto.getEmail() == null
+                || userDto.getEmail().isBlank()) {
+
+            throw new RuntimeException(
+                    bundleMessageService.getMessage(
+                            "error.user.email.required"));
+        }
 
         User user = new User();
 
